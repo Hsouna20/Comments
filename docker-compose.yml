@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./client
+    container_name: comment-client
+    ports:
+      - "86:86"
+    depends_on:
+      - backend
+    networks:
+      - comments-network
+
+  backend:
+    build: .
+    container_name: comment-back
+    ports:
+      - "3007:3007"
+    depends_on:
+      - mongo
+    networks:
+      - comments-network
+
+  mongo:
+    image: mongo:4.4.6
+    container_name: mongo
+    ports:
+      - "27022:27017"
+    volumes:
+      - mongo-data-comments:/data/db
+    networks:
+      - comments-network
+
+volumes:
+  mongo-data-comments:
+    
+
+networks:
+   comments-network:
+    driver: bridge
